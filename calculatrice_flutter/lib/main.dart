@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(Calculatrice());
@@ -21,6 +22,52 @@ class SimpleCalculatrice extends StatefulWidget {
 }
 
 class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
+  String calcul = "0";
+  String result = "0";
+  String expression = "0";
+
+  ButtonPressed(String txt) {
+    setState(() {
+      switch (txt) {
+        case "C":
+          {
+            calcul = "0";
+            result = "0";
+          }
+          break;
+
+        case "DEL":
+          {
+            if (calcul.length > 1) {
+              calcul = calcul.substring(0, calcul.length - 1);
+            } else {
+              calcul = "0";
+            }
+          }
+          break;
+        case "=":
+          {
+            expression = calcul.replaceAll("÷", "/").replaceAll("×", "*");
+            try {
+              Parser p = Parser();
+              Expression exp = p.parse(expression);
+              ContextModel cm = ContextModel();
+              result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+            } catch (e) {
+              result = "Erreur de syntaxe";
+            }
+          }
+          break;
+        default:
+          {
+            if (calcul == "0") calcul = "";
+            calcul += txt;
+          }
+          break;
+      }
+    });
+  }
+
   Widget calculatriceButton(
       String txt, Color couleurText, Color couleurBouton) {
     return Container(
@@ -28,7 +75,7 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
       color: couleurBouton,
       child: MaterialButton(
         padding: EdgeInsets.all(16),
-        onPressed: null,
+        onPressed: () => ButtonPressed(txt),
         child: Text(
           txt,
           style: TextStyle(
@@ -51,7 +98,7 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
             alignment: Alignment.centerRight,
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             child: Text(
-              "0",
+              calcul,
               style: TextStyle(fontSize: 35),
             ),
           ),
@@ -59,7 +106,7 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
             alignment: Alignment.centerRight,
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             child: Text(
-              "0",
+              result,
               style: TextStyle(fontSize: 25, color: Colors.grey[600]),
             ),
           ),
