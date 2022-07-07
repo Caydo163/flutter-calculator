@@ -22,17 +22,17 @@ class SimpleCalculatrice extends StatefulWidget {
 }
 
 class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
-  String calcul = "0";
-  String result = "0";
-  String expression = "0";
+  String calcul = "";
+  String result = "";
+  String expression = "";
 
   ButtonPressed(String txt) {
     setState(() {
       switch (txt) {
         case "C":
           {
-            calcul = "0";
-            result = "0";
+            calcul = "";
+            result = "";
           }
           break;
 
@@ -41,20 +41,136 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
             if (calcul.length > 1) {
               calcul = calcul.substring(0, calcul.length - 1);
             } else {
-              calcul = "0";
+              calcul = "";
             }
           }
           break;
+
+        case "+":
+          {
+            if (calcul.isNotEmpty) {
+              String lastCarac =
+                  calcul.substring(calcul.length - 1, calcul.length);
+              if (lastCarac != "+" && calcul != "0") {
+                if (lastCarac == "×" ||
+                    lastCarac == "÷" ||
+                    lastCarac == "-" ||
+                    lastCarac == "%") {
+                  calcul = calcul.substring(0, calcul.length - 1) + txt;
+                } else {
+                  calcul += txt;
+                }
+              }
+            }
+          }
+          break;
+
+        case "-":
+          {
+            if (calcul.isNotEmpty) {
+              String lastCarac =
+                  calcul.substring(calcul.length - 1, calcul.length);
+              if (lastCarac != "-" && calcul != "0") {
+                if (lastCarac == "×" ||
+                    lastCarac == "÷" ||
+                    lastCarac == "+" ||
+                    lastCarac == "%") {
+                  calcul = calcul.substring(0, calcul.length - 1) + txt;
+                } else {
+                  calcul += txt;
+                }
+              }
+            }
+          }
+          break;
+
+        case "×":
+          {
+            if (calcul.isNotEmpty) {
+              String lastCarac =
+                  calcul.substring(calcul.length - 1, calcul.length);
+              if (lastCarac != "×" && calcul != "0") {
+                if (lastCarac == "+" ||
+                    lastCarac == "÷" ||
+                    lastCarac == "-" ||
+                    lastCarac == "%") {
+                  calcul = calcul.substring(0, calcul.length - 1) + txt;
+                } else {
+                  calcul += txt;
+                }
+              }
+            }
+          }
+          break;
+
+        case "÷":
+          {
+            if (calcul.isNotEmpty) {
+              String lastCarac =
+                  calcul.substring(calcul.length - 1, calcul.length);
+              if (lastCarac != "÷" && calcul != "0") {
+                if (lastCarac == "×" ||
+                    lastCarac == "+" ||
+                    lastCarac == "-" ||
+                    lastCarac == "%") {
+                  calcul = calcul.substring(0, calcul.length - 1) + txt;
+                } else {
+                  calcul += txt;
+                }
+              }
+            }
+          }
+          break;
+
+        case "%":
+          {
+            if (calcul.isNotEmpty) {
+              String lastCarac =
+                  calcul.substring(calcul.length - 1, calcul.length);
+              if (lastCarac != "%" && calcul != "0") {
+                if (lastCarac == "×" ||
+                    lastCarac == "÷" ||
+                    lastCarac == "-" ||
+                    lastCarac == "+") {
+                  calcul = calcul.substring(0, calcul.length - 1) + txt;
+                } else {
+                  calcul += txt;
+                }
+              }
+            }
+          }
+          break;
+
+        case ".":
+          {
+            if (calcul.isNotEmpty) {
+              String lastCarac =
+                  calcul.substring(calcul.length - 1, calcul.length);
+              if (lastCarac != "." &&
+                  lastCarac != "%" &&
+                  lastCarac != "×" &&
+                  lastCarac != "÷" &&
+                  lastCarac != "-" &&
+                  lastCarac != "+") {
+                calcul += txt;
+              }
+            }
+          }
+          break;
+
         case "=":
           {
-            expression = calcul.replaceAll("÷", "/").replaceAll("×", "*");
-            try {
-              Parser p = Parser();
-              Expression exp = p.parse(expression);
-              ContextModel cm = ContextModel();
-              result = "${exp.evaluate(EvaluationType.REAL, cm)}";
-            } catch (e) {
-              result = "Erreur de syntaxe";
+            if (calcul.isNotEmpty) {
+              expression = calcul.replaceAll("÷", "/").replaceAll("×", "*");
+              try {
+                Parser p = Parser();
+                Expression exp = p.parse(expression);
+                ContextModel cm = ContextModel();
+
+                result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+              } catch (e) {
+                result = "Erreur";
+              }
             }
           }
           break;
