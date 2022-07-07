@@ -1,3 +1,3 @@
-# Calculatrice Flutter
+# calculatrice_flutter
 
-Application d'une calculatrice avec flutter
+A new Flutter project.
