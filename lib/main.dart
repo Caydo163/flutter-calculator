@@ -160,20 +160,10 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
 
         case "=":
           {
-            if (calcul.isNotEmpty) {
-              expression = calcul.replaceAll("÷", "/").replaceAll("×", "*");
-              try {
-                Parser p = Parser();
-                Expression exp = p.parse(expression);
-                ContextModel cm = ContextModel();
-
-                result = "${exp.evaluate(EvaluationType.REAL, cm)}";
-              } catch (e) {
-                result = "Erreur";
-              }
-            }
+            calcul = result;
           }
           break;
+
         default:
           {
             if (calcul == "0") calcul = "";
@@ -181,21 +171,43 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
           }
           break;
       }
+
+      if (calcul.isNotEmpty) {
+        expression = calcul.replaceAll("÷", "/").replaceAll("×", "*");
+        try {
+          Parser p = Parser();
+          Expression exp = p.parse(expression);
+          ContextModel cm = ContextModel();
+          // String resultat = exp.evaluate(EvaluationType.REAL, cm);
+          // if(resultat%1)
+
+          result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+          if (result.substring(result.length - 2, result.length) == ".0") {
+            result = result.substring(0, result.length - 2);
+          }
+        } catch (e) {}
+      }
     });
   }
 
   Widget calculatriceButton(
       String txt, Color couleurText, Color couleurBouton) {
     return Container(
+      margin: const EdgeInsets.all(5),
       height: MediaQuery.of(context).size.height * 0.1,
-      color: couleurBouton,
-      child: MaterialButton(
-        padding: EdgeInsets.all(16),
-        onPressed: () => ButtonPressed(txt),
-        child: Text(
-          txt,
-          style: TextStyle(
-              color: couleurText, fontSize: 30, fontWeight: FontWeight.normal),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: MaterialButton(
+          color: couleurBouton,
+          padding: EdgeInsets.all(7),
+          onPressed: () => ButtonPressed(txt),
+          child: Text(
+            txt,
+            style: TextStyle(
+                color: couleurText,
+                fontSize: 25,
+                fontWeight: FontWeight.normal),
+          ),
         ),
       ),
     );
@@ -204,26 +216,27 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Calculatrice"),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.deepPurple[100],
+      // appBar: AppBar(
+      //   title: Text("Calculatrice"),
+      //   centerTitle: true,
+      // ),
       body: Column(
         children: [
           Container(
-            alignment: Alignment.centerRight,
-            padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.fromLTRB(20, 80, 10, 0),
             child: Text(
               calcul,
-              style: TextStyle(fontSize: 35),
+              style: TextStyle(fontSize: 40, color: Colors.deepPurple),
             ),
           ),
           Container(
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
+            padding: EdgeInsets.fromLTRB(20, 40, 10, 0),
             child: Text(
               result,
-              style: TextStyle(fontSize: 25, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 30, color: Colors.deepPurple[300]),
             ),
           ),
           Expanded(child: Divider()),
@@ -235,34 +248,47 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
                 child: Table(
                   children: [
                     TableRow(children: [
-                      calculatriceButton("C", Colors.redAccent, Colors.white),
-                      calculatriceButton("DEL", Colors.blue, Colors.white),
-                      calculatriceButton("%", Colors.blue, Colors.white),
-                      calculatriceButton("÷", Colors.blue, Colors.white),
+                      calculatriceButton("C", Colors.white, Colors.green),
+                      calculatriceButton("DEL", Colors.white, Colors.red),
+                      calculatriceButton("%", Colors.white, Colors.purple),
+                      calculatriceButton("÷", Colors.white, Colors.purple),
                     ]),
                     TableRow(children: [
-                      calculatriceButton("7", Colors.blue, Colors.white),
-                      calculatriceButton("8", Colors.blue, Colors.white),
-                      calculatriceButton("9", Colors.blue, Colors.white),
-                      calculatriceButton("×", Colors.blue, Colors.white),
+                      calculatriceButton(
+                          "7", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "8", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "9", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton("×", Colors.white, Colors.purple),
                     ]),
                     TableRow(children: [
-                      calculatriceButton("4", Colors.blue, Colors.white),
-                      calculatriceButton("5", Colors.blue, Colors.white),
-                      calculatriceButton("6", Colors.blue, Colors.white),
-                      calculatriceButton("-", Colors.blue, Colors.white),
+                      calculatriceButton(
+                          "4", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "5", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "6", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton("-", Colors.white, Colors.purple),
                     ]),
                     TableRow(children: [
-                      calculatriceButton("1", Colors.blue, Colors.white),
-                      calculatriceButton("2", Colors.blue, Colors.white),
-                      calculatriceButton("3", Colors.blue, Colors.white),
-                      calculatriceButton("+", Colors.blue, Colors.white),
+                      calculatriceButton(
+                          "1", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "2", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "3", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton("+", Colors.white, Colors.purple),
                     ]),
                     TableRow(children: [
-                      calculatriceButton(".", Colors.blue, Colors.white),
-                      calculatriceButton("0", Colors.blue, Colors.white),
-                      calculatriceButton("00", Colors.blue, Colors.white),
-                      calculatriceButton("=", Colors.white, Colors.blue),
+                      calculatriceButton(
+                          ".", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "0", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "00", Colors.deepPurple.shade300, Colors.white),
+                      calculatriceButton(
+                          "=", Colors.white, Colors.purple.shade700),
                     ]),
                   ],
                 ),
