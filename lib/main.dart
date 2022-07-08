@@ -1,31 +1,43 @@
+// IMPORTATION _____________________________________________
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:flutter_bounce/flutter_bounce.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+// MAIN _____________________________________________
 void main() {
   runApp(Calculatrice());
 }
 
+// CALCULATRICE _____________________________________________
 class Calculatrice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Calculatrice",
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+          primarySwatch: Colors.blue, fontFamily: 'Montserrat Medium'),
       home: SimpleCalculatrice(),
     );
   }
 }
 
+// SIMPLE CALCULATRICE _____________________________________________
 class SimpleCalculatrice extends StatefulWidget {
   @override
   _SimpleCalculatriceState createState() => _SimpleCalculatriceState();
 }
 
+// SIMPLE CALCULATRICE STATE ________________________________________
 class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
-  String calcul = "";
-  String result = "";
-  String expression = "";
+  // Initialisation variables
+  String calcul = ""; // Calcul de l'utilisateur
+  String result = ""; // Résultat du calcul
+  bool equalMode =
+      false; // Savoir si la variable calcul contient un calcul ou un résultat
 
+  // Action des boutons de la calculatrice
   ButtonPressed(String txt) {
     setState(() {
       switch (txt) {
@@ -33,6 +45,7 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
           {
             calcul = "";
             result = "";
+            equalMode = false;
           }
           break;
 
@@ -42,7 +55,9 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               calcul = calcul.substring(0, calcul.length - 1);
             } else {
               calcul = "";
+              result = "";
             }
+            equalMode = false;
           }
           break;
 
@@ -52,15 +67,13 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               String lastCarac =
                   calcul.substring(calcul.length - 1, calcul.length);
               if (lastCarac != "+" && calcul != "0") {
-                if (lastCarac == "×" ||
-                    lastCarac == "÷" ||
-                    lastCarac == "-" ||
-                    lastCarac == "%") {
+                if (isOperator(lastCarac)) {
                   calcul = calcul.substring(0, calcul.length - 1) + txt;
                 } else {
                   calcul += txt;
                 }
               }
+              equalMode = false;
             }
           }
           break;
@@ -71,15 +84,13 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               String lastCarac =
                   calcul.substring(calcul.length - 1, calcul.length);
               if (lastCarac != "-" && calcul != "0") {
-                if (lastCarac == "×" ||
-                    lastCarac == "÷" ||
-                    lastCarac == "+" ||
-                    lastCarac == "%") {
+                if (isOperator(lastCarac)) {
                   calcul = calcul.substring(0, calcul.length - 1) + txt;
                 } else {
                   calcul += txt;
                 }
               }
+              equalMode = false;
             }
           }
           break;
@@ -90,15 +101,13 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               String lastCarac =
                   calcul.substring(calcul.length - 1, calcul.length);
               if (lastCarac != "×" && calcul != "0") {
-                if (lastCarac == "+" ||
-                    lastCarac == "÷" ||
-                    lastCarac == "-" ||
-                    lastCarac == "%") {
+                if (isOperator(lastCarac)) {
                   calcul = calcul.substring(0, calcul.length - 1) + txt;
                 } else {
                   calcul += txt;
                 }
               }
+              equalMode = false;
             }
           }
           break;
@@ -109,15 +118,13 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               String lastCarac =
                   calcul.substring(calcul.length - 1, calcul.length);
               if (lastCarac != "÷" && calcul != "0") {
-                if (lastCarac == "×" ||
-                    lastCarac == "+" ||
-                    lastCarac == "-" ||
-                    lastCarac == "%") {
+                if (isOperator(lastCarac)) {
                   calcul = calcul.substring(0, calcul.length - 1) + txt;
                 } else {
                   calcul += txt;
                 }
               }
+              equalMode = false;
             }
           }
           break;
@@ -128,15 +135,13 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               String lastCarac =
                   calcul.substring(calcul.length - 1, calcul.length);
               if (lastCarac != "%" && calcul != "0") {
-                if (lastCarac == "×" ||
-                    lastCarac == "÷" ||
-                    lastCarac == "-" ||
-                    lastCarac == "+") {
+                if (isOperator(lastCarac)) {
                   calcul = calcul.substring(0, calcul.length - 1) + txt;
                 } else {
                   calcul += txt;
                 }
               }
+              equalMode = false;
             }
           }
           break;
@@ -146,73 +151,106 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
             if (calcul.isNotEmpty) {
               String lastCarac =
                   calcul.substring(calcul.length - 1, calcul.length);
-              if (lastCarac != "." &&
-                  lastCarac != "%" &&
-                  lastCarac != "×" &&
-                  lastCarac != "÷" &&
-                  lastCarac != "-" &&
-                  lastCarac != "+") {
+              if (lastCarac != "." && !isOperator(lastCarac)) {
                 calcul += txt;
               }
+              equalMode = false;
             }
           }
           break;
 
         case "=":
           {
-            calcul = result;
+            if (!isOperator(calcul.substring(calcul.length - 1))) {
+              if (calcul.contains('+') ||
+                  calcul.contains('-') ||
+                  calcul.contains('÷') ||
+                  calcul.contains('×')) {
+                calcul = result;
+              }
+              result = "";
+              equalMode = true;
+            } else {
+              Fluttertoast.showToast(
+                msg: "Erreur de syntaxe",
+                toastLength: Toast.LENGTH_SHORT,
+                backgroundColor: Color.fromARGB(209, 186, 51, 210),
+                textColor: Colors.black,
+              );
+            }
           }
           break;
 
         default:
           {
             if (calcul == "0") calcul = "";
-            calcul += txt;
+            if (equalMode) {
+              calcul = "";
+              equalMode = false;
+            }
           }
+          calcul += txt;
           break;
       }
 
-      if (calcul.isNotEmpty) {
-        expression = calcul.replaceAll("÷", "/").replaceAll("×", "*");
+      if (calcul.isNotEmpty && !equalMode) {
         try {
+          // Calcul du résultat
           Parser p = Parser();
-          Expression exp = p.parse(expression);
+          Expression exp =
+              p.parse(calcul.replaceAll("÷", "/").replaceAll("×", "*"));
           ContextModel cm = ContextModel();
-          // String resultat = exp.evaluate(EvaluationType.REAL, cm);
-          // if(resultat%1)
 
-          result = "${exp.evaluate(EvaluationType.REAL, cm)}";
-          if (result.substring(result.length - 2, result.length) == ".0") {
-            result = result.substring(0, result.length - 2);
+          // On affiche le résultat
+          String rep =
+              "${double.parse((exp.evaluate(EvaluationType.REAL, cm)).toStringAsFixed(10))}";
+
+          // Si '.0' ou '.' à la fin, on supprime
+          if (rep.substring(rep.length - 2, rep.length) == ".0") {
+            result = rep.substring(0, rep.length - 2);
+          } else {
+            if (rep.substring(rep.length - 1, rep.length) == ".") {
+              result = rep.substring(0, rep.length - 1);
+            } else {
+              result = rep;
+            }
           }
         } catch (e) {}
       }
     });
   }
 
+  // Bouton de la calculatrice
   Widget calculatriceButton(
       String txt, Color couleurText, Color couleurBouton) {
-    return Container(
-      margin: const EdgeInsets.all(5),
-      height: MediaQuery.of(context).size.height * 0.1,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: MaterialButton(
-          color: couleurBouton,
-          padding: EdgeInsets.all(7),
-          onPressed: () => ButtonPressed(txt),
-          child: Text(
-            txt,
-            style: TextStyle(
-                color: couleurText,
-                fontSize: 25,
-                fontWeight: FontWeight.normal),
+    return Bounce(
+      onPressed: () {
+        ButtonPressed(txt);
+      },
+      duration: Duration(milliseconds: 180),
+      child: Container(
+        margin: const EdgeInsets.all(5),
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            color: couleurBouton,
+            padding: EdgeInsets.all(7),
+            alignment: Alignment.center,
+            child: Text(
+              txt,
+              style: TextStyle(
+                  color: couleurText,
+                  fontSize: 25,
+                  fontWeight: FontWeight.normal),
+            ),
           ),
         ),
       ),
     );
   }
 
+  // Page de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,23 +261,42 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
       // ),
       body: Column(
         children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.fromLTRB(20, 80, 10, 0),
-            child: Text(
-              calcul,
-              style: TextStyle(fontSize: 40, color: Colors.deepPurple),
+          // Zone d'écriture (calcul et résultat)
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.fromLTRB(20, 80, 10, 0),
+                    child: Text(
+                      calcul,
+                      style: TextStyle(fontSize: 40, color: Colors.deepPurple),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.fromLTRB(20, 40, 10, 0),
+                    child: Text(
+                      result,
+                      style: TextStyle(
+                          fontSize: 30, color: Colors.deepPurple[300]),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Container(
-            alignment: Alignment.centerRight,
-            padding: EdgeInsets.fromLTRB(20, 40, 10, 0),
-            child: Text(
-              result,
-              style: TextStyle(fontSize: 30, color: Colors.deepPurple[300]),
-            ),
+
+          // Séparateur
+          Divider(
+            color: Colors.purple[200],
+            indent: 15,
+            endIndent: 15,
           ),
-          Expanded(child: Divider()),
+
+          // Zone de boutons
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -299,4 +356,10 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
       ),
     );
   }
+}
+
+/// Vérifie si le caractère est un opérateur
+/// Renvoie true si le caractère c est un opérateur
+bool isOperator(String c) {
+  return c == "%" || c == "-" || c == "+" || c == "×" || c == "÷";
 }
