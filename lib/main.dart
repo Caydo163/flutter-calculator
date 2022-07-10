@@ -174,7 +174,7 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               Fluttertoast.showToast(
                 msg: "Erreur de syntaxe",
                 toastLength: Toast.LENGTH_SHORT,
-                backgroundColor: Color.fromARGB(209, 186, 51, 210),
+                backgroundColor: const Color.fromARGB(209, 186, 51, 210),
                 textColor: Colors.black,
               );
             }
@@ -227,15 +227,24 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
       onPressed: () {
         ButtonPressed(txt);
       },
-      duration: Duration(milliseconds: 180),
+      duration: const Duration(milliseconds: 180),
       child: Container(
         margin: const EdgeInsets.all(5),
         height: MediaQuery.of(context).size.height * 0.1,
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            // color: Colors.blue,
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: Offset(0, 5),
+          )
+        ]),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
             color: couleurBouton,
-            padding: EdgeInsets.all(7),
+            padding: const EdgeInsets.all(7),
             alignment: Alignment.center,
             child: Text(
               txt,
@@ -254,105 +263,120 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple[100],
+      // backgroundColor: Colors.deepPurple[100],
       // appBar: AppBar(
       //   title: Text("Calculatrice"),
       //   centerTitle: true,
       // ),
-      body: Column(
-        children: [
-          // Zone d'écriture (calcul et résultat)
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.fromLTRB(20, 80, 10, 0),
-                    child: Text(
-                      calcul,
-                      style: TextStyle(fontSize: 40, color: Colors.deepPurple),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.fromLTRB(20, 40, 10, 0),
-                    child: Text(
-                      result,
-                      style: TextStyle(
-                          fontSize: 30, color: Colors.deepPurple[300]),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Séparateur
-          Divider(
-            color: Colors.purple[200],
-            indent: 15,
-            endIndent: 15,
-          ),
-
-          // Zone de boutons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Table(
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+              Color.fromARGB(255, 226, 168, 236),
+              Color.fromARGB(255, 181, 163, 184),
+            ])),
+        child: Column(
+          children: [
+            // Zone d'écriture (calcul et résultat)
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
                   children: [
-                    TableRow(children: [
-                      calculatriceButton("C", Colors.white, Colors.green),
-                      calculatriceButton("DEL", Colors.white, Colors.red),
-                      calculatriceButton("%", Colors.white, Colors.purple),
-                      calculatriceButton("÷", Colors.white, Colors.purple),
-                    ]),
-                    TableRow(children: [
-                      calculatriceButton(
-                          "7", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "8", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "9", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton("×", Colors.white, Colors.purple),
-                    ]),
-                    TableRow(children: [
-                      calculatriceButton(
-                          "4", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "5", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "6", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton("-", Colors.white, Colors.purple),
-                    ]),
-                    TableRow(children: [
-                      calculatriceButton(
-                          "1", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "2", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "3", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton("+", Colors.white, Colors.purple),
-                    ]),
-                    TableRow(children: [
-                      calculatriceButton(
-                          ".", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "0", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "00", Colors.deepPurple.shade300, Colors.white),
-                      calculatriceButton(
-                          "=", Colors.white, Colors.purple.shade700),
-                    ]),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.fromLTRB(20, 80, 10, 0),
+                      child: Text(
+                        calcul,
+                        style: const TextStyle(
+                            fontSize: 40, color: Colors.deepPurple),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.fromLTRB(20, 40, 10, 0),
+                      child: Text(
+                        result,
+                        style: TextStyle(
+                            fontSize: 30, color: Colors.deepPurple[300]),
+                      ),
+                    ),
                   ],
                 ),
-              )
-            ],
-          )
-        ],
+              ),
+            ),
+
+            // Séparateur
+            Divider(
+              color: Colors.purple[200],
+              indent: 15,
+              endIndent: 15,
+            ),
+
+            // Zone de boutons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Table(
+                    children: [
+                      TableRow(children: [
+                        calculatriceButton("C", Colors.white, Colors.green),
+                        calculatriceButton("DEL", Colors.white, Colors.red),
+                        calculatriceButton("%", Colors.white, Colors.purple),
+                        calculatriceButton("÷", Colors.white,
+                            const Color.fromARGB(255, 156, 39, 176)),
+                      ]),
+                      TableRow(children: [
+                        calculatriceButton(
+                            "7", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "8", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "9", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton("×", Colors.white,
+                            const Color.fromARGB(255, 156, 39, 176)),
+                      ]),
+                      TableRow(children: [
+                        calculatriceButton(
+                            "4", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "5", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "6", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton("-", Colors.white,
+                            const Color.fromARGB(255, 156, 39, 176)),
+                      ]),
+                      TableRow(children: [
+                        calculatriceButton(
+                            "1", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "2", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "3", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton("+", Colors.white,
+                            const Color.fromARGB(255, 156, 39, 176)),
+                      ]),
+                      TableRow(children: [
+                        calculatriceButton(
+                            ".", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "0", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton(
+                            "00", Colors.deepPurple.shade300, Colors.white),
+                        calculatriceButton("=", Colors.white,
+                            const Color.fromARGB(255, 57, 9, 74)),
+                      ]),
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
