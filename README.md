@@ -5,6 +5,11 @@
 Voici ma première application en flutter.
 Pour ce projet j'ai choisis de réaliser une calculatrice, puisque c'est un projet assez simple pour commencer à apprendre flutter.
 
+**Voici le design de l'application**
+
+<img src="images_readme/Screenshot_1.png" alt="screen" width="200"/>
+<img src="images_readme/Screenshot_2.png" alt="screen" width="200"/>
+
 ## Explication
 
 - Pour réaliser ce projet je me suis aidée de deux vidéos YouTube publié par [Technovore](https://www.youtube.com/c/Technovoreci/featured) pour avoir la base de l'application.
