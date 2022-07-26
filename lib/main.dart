@@ -15,6 +15,7 @@ class Calculatrice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Calculatrice",
       theme: ThemeData(
           primarySwatch: Colors.blue, fontFamily: 'Montserrat Medium'),
@@ -165,6 +166,7 @@ class _SimpleCalculatriceState extends State<SimpleCalculatrice> {
               if (calcul.contains('+') ||
                   calcul.contains('-') ||
                   calcul.contains('÷') ||
+                  calcul.contains('%') ||
                   calcul.contains('×')) {
                 calcul = result;
               }
