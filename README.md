@@ -24,3 +24,7 @@ Pour ce projet j'ai choisis de réaliser une calculatrice, puisque c'est un proj
   Lien du post : [codingzest](https://www.instagram.com/p/Ce_dtw0DcQv/?utm_source=ig_web_copy_link)
 
 - Pour finir, j'ai apportées mes propres modifications pour améliorer cette calculatrice comme l'ajout d'animations ou une meilleure gestion des erreurs.
+
+## Application
+
+Voici le fichier APK pour installer l'application sur Android : [calculatrice.apk](build/app/outputs/flutter-apk/app.apk)
