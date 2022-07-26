@@ -27,4 +27,4 @@ Pour ce projet j'ai choisis de réaliser une calculatrice, puisque c'est un proj
 
 ## Application
 
-Voici le fichier APK pour installer l'application sur Android : [calculatrice.apk](build/app/outputs/flutter-apk/app.apk)
+Voici le fichier APK pour installer l'application sur Android : [calculatrice.apk](calculatrice.apk)
